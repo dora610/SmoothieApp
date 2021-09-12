@@ -2,18 +2,6 @@ const form = document.querySelector('form');
 const emailErr = form.querySelector('.email.error');
 const passwordErr = form.querySelector('.password.error');
 
-/* let url;
-const pageType = form.querySelector('button').textContent;
-if (pageType.toLocaleLowerCase() === 'log in') {
-  console.log('login page');
-  console.log(location.pathname);
-  url = '/login';
-} else if (pageType.toLocaleLowerCase() === 'sign up') {
-  url = '/signup';
-  console.log('signup page');
-  console.log(location.pathname);
-} */
-
 const url = location.pathname;
 
 // TODO: tooltip

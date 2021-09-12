@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon node app.js",
+    "start": "nodemon node app.js --ignore public/ --ignore views/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

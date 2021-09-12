@@ -4,6 +4,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoutes');
 const cookieParser = require('cookie-parser');
+const { requireAuth } = require('./middlewares/authMiddleware');
 
 const port = process.env.PORT || 7777;
 
@@ -31,7 +32,17 @@ mongoose
 app.get('/', (req, res) => {
   res.render('home');
 });
-app.get('/smoothies', (req, res) => res.render('smoothies'));
+app.get('/smoothies', requireAuth, (req, res) => {
+  let smoothies = [
+    { name: 'Banana Boost', ingrdt: ['Banana', 'Vanilla ice cream', 'Milk'] },
+    { name: 'Tropical Twist', ingrdt: ['Peach', 'Pinapple', 'Apple juice'] },
+    {
+      name: 'Protein Packer',
+      ingrdt: ['Oats', 'Peanut butter', 'Mil', 'Banana', 'Blueberries'],
+    },
+  ];
+  res.render('smoothies', { smoothies: [...smoothies, ...smoothies] });
+});
 app.use(authRoute);
 
 // cookies

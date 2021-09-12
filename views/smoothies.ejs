@@ -1,5 +1,9 @@
-<%-include('partials/header') %>
+<%-include('partials/header') -%>
 
+<ul class="recipes">
+<% smoothies.forEach(function(smoothie){ %> 
+    <%- include('partials/smoothieCard', { smoothie}) -%> 
+<% }) %>
+</ul>
 
-
-<%-include('partials/footer') %>
+<%-include('partials/footer') -%>
