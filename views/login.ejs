@@ -1,0 +1,17 @@
+<%-include('partials/header') -%>
+
+<form>
+    <h2>Log in</h2>
+    <label for="email">Email:</label>
+    <input type="email" name="email" required />
+    <div class="email error"></div>
+    <label for="password">Password:</label>
+    <input type="password" name="password" required />
+    <div class="password error"></div>
+    <!-- TODO: add a tooltip for password -->
+    <button>Log in</button>
+  </form>
+
+<script src="/form.js"></script>
+
+<%-include('partials/footer') -%>

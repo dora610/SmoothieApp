@@ -1,0 +1,53 @@
+<%-include('partials/header') -%>
+
+<form>
+  <h2>Sign up</h2>
+  <label for="email">Email:</label>
+  <input type="email" name="email" required />
+  <div class="email error"></div>
+  <label for="password">Password:</label>
+  <input type="password" name="password" required />
+  <div class="password error"></div>
+  <!-- TODO: add a tooltip for password -->
+  <button>Sign up</button>
+</form>
+
+<script src="/form.js"></script>
+
+<!-- <script>
+  const form = document.querySelector('form');
+  const emailErr = form.querySelector('.email.error');
+  const passwordErr = form.querySelector('.password.error');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = form[(name = 'email')].value;
+    const password = form[(name = 'password')].value;
+
+    emailErr.textContent = '';
+    passwordErr.textContent = '';
+
+    fetch('/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.errors) {
+          emailErr.textContent = data.errors.email;
+          passwordErr.textContent = data.errors.password;
+        }
+        data.user && location.assign('/');
+      })
+      .catch((err) => console.error(err));
+  });
+</script> -->
+
+<%-include('partials/footer') -%>
