@@ -5,11 +5,6 @@ const passwordErr = form.querySelector('.password.error');
 const url = location.pathname;
 
 // TODO: tooltip
-/* const passwordFieled = form.querySelector('[name="password"]');
-  passwordFieled.addEventListener('mousemove', (e) => {
-    const { clientX, clientY } = e;
-    console.log(clientX, clientY);
-  }); */
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();

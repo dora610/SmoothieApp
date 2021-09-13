@@ -18,27 +18,9 @@ const userSchema = new Schema({
   },
 });
 
-/* function passwordReversal(pss) {
-  try {
-    const revPss = [];
-    const pssArr = [...pss];
-    pssArr.forEach((e) => revPss.unshift(e));
-    return revPss.join('');
-  } catch (err) {
-    console.error(err);
-  }
-} */
-
 userSchema.pre('save', async function (next) {
   const salt = await genSalt();
   this.password = await hash(this.password, salt);
-  next();
-});
-
-userSchema.post('save', (doc, next) => {
-  console.log(
-    `from post hook: User is successfully created with userid: ${doc._id}`
-  );
   next();
 });
 

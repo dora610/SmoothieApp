@@ -4,7 +4,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoutes');
 const cookieParser = require('cookie-parser');
-const { requireAuth } = require('./middlewares/authMiddleware');
+const { requireAuth, chechUser } = require('./middlewares/authMiddleware');
 
 const port = process.env.PORT || 7777;
 
@@ -29,6 +29,7 @@ mongoose
   .catch((err) => console.error(err));
 
 // routes
+app.get('*', chechUser);
 app.get('/', (req, res) => {
   res.render('home');
 });

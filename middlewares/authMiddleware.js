@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 const requireAuth = (req, res, next) => {
   const token = req.cookies['jwt'];
@@ -7,16 +8,33 @@ const requireAuth = (req, res, next) => {
       if (err) {
         console.error(err);
         res.redirect('/login');
-      } else {
-        console.log(decodedToken);
-        next();
       }
+      next();
     });
   } else {
+    // TODO: redirect back to /smoothies url after successful login
     res.redirect('/login');
   }
 };
 
-// TODO: redirect back to /smoothies url after successful login
+const chechUser = (req, res, next) => {
+  const token = req.cookies['jwt'];
 
-module.exports = { requireAuth };
+  if (token) {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, { id }) => {
+      if (err) {
+        console.error(err);
+        res.locals.user = null;
+        next();
+      } else {
+        res.locals.user = await User.findById(id);
+        next();
+      }
+    });
+  } else {
+    res.locals.user = null;
+    next();
+  }
+};
+
+module.exports = { requireAuth, chechUser };

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const maxAge = 1000 * 60 * 15;
 
 const handleErrors = (err) => {
-  console.error(err.message, err.code);
+  // console.error(err.message, err.code);
   let errors = {};
   // check for duplicate email
 
@@ -65,8 +65,11 @@ module.exports.login_post = async (req, res) => {
     });
     res.status(200).json({ user: user._id });
   } catch (err) {
-    // let errors = handleErrors(err);
-    // console.error(errors);
     res.status(400).json({ errors: handleErrors(err) });
   }
+};
+
+module.exports.logout_get = (req, res) => {
+  res.cookie('jwt', '', { maxAge: 1 });
+  res.redirect('/');
 };
