@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoutes');
+const smoothieRoute = require('./routes/smoothieRoute');
 const cookieParser = require('cookie-parser');
 const { requireAuth, chechUser } = require('./middlewares/authMiddleware');
 
@@ -33,7 +34,7 @@ app.get('*', chechUser);
 app.get('/', (req, res) => {
   res.render('home');
 });
-app.get('/smoothies', requireAuth, (req, res) => {
+/* app.get('/smoothies', requireAuth, (req, res) => {
   let smoothies = [
     { name: 'Banana Boost', ingrdt: ['Banana', 'Vanilla ice cream', 'Milk'] },
     { name: 'Tropical Twist', ingrdt: ['Peach', 'Pinapple', 'Apple juice'] },
@@ -43,8 +44,9 @@ app.get('/smoothies', requireAuth, (req, res) => {
     },
   ];
   res.render('smoothies', { smoothies: [...smoothies, ...smoothies] });
-});
+}); */
 app.use(authRoute);
+app.use('/smoothies', smoothieRoute);
 
 // cookies
 /* app.get('/set-cookies', (req, res) => {

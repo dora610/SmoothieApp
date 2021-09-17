@@ -1,0 +1,19 @@
+<%-include('partials/header') -%>
+
+<form>
+  <h2>Add recipe</h2>
+  <label for="title">Title: </label>
+  <input type="text" name="title" />
+  <div class="ingredients">
+    <label for="ingr">Enter ingerdient name:</label>
+    <input type="text" name="ingr" id="ingr" />
+    <div class="ingr_error"></div>
+    <button class="btn_add">Add</button>
+    <div class="ingr_added"></div>
+  </div>
+  <button type="submit" class="btn_submit">Create smoothie</button>
+</form>
+
+<script src="/recipe.js"></script>
+
+<%-include('partials/footer') -%>

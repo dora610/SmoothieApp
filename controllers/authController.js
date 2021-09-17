@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-const maxAge = 1000 * 60 * 15;
+const maxAge = 1000 * 60 * 60;
 
 const handleErrors = (err) => {
   // console.error(err.message, err.code);
@@ -54,7 +54,7 @@ module.exports.login_get = (req, res) => {
   res.render('login');
 };
 module.exports.login_post = async (req, res) => {
-  const { email, password } = req.body;
+  // const { email, password } = req.body;
   try {
     const user = await User.login(req.body);
     const token = createToken(user._id);
