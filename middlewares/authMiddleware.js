@@ -27,7 +27,7 @@ const chechUser = (req, res, next) => {
         res.locals.user = null;
         next();
       } else {
-        res.locals.user = await User.findById(id);
+        res.locals.user = await User.findById(id).select({ email: 1 });
         next();
       }
     });

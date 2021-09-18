@@ -1,15 +1,12 @@
 <%-include('partials/header') -%>
 
-<a href="/smoothies/add" class="btn">Add smoothie</a>
-
+<div class="new_smoothie">
+  <a href="/smoothies/add" class="btn btn_outline">Add smoothie</a>
+</div>
 <ul class="recipes">
   <% smoothies.forEach(function(smoothie){ %>
     <%- include('partials/smoothieCard', { smoothie}) -%>
   <% }) %>
-
-  <!-- <li class="recipe add-recipe">
-    <a href="/smoothies/add" class="btn">Add smoothie</a>
-  </li> -->
 </ul>
 
 <%-include('partials/footer') -%>

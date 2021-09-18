@@ -26,13 +26,12 @@ function CreateElementList(ele) {
 
   const showIngredients = () => {
     ingrResult.innerHTML = '';
-    // preparing html
+
     const html = ingredientList
       .map((ele, index) => {
         return `
         <div>
           <p data-index="${index + 1}">${ele}</p>
-          <input type="text" name="ingr_ele" >
           <button data-index="${
             index + 1
           }" class="btn btn_delete" >Delete</button>
@@ -41,7 +40,7 @@ function CreateElementList(ele) {
       })
       .join('');
     ingrResult.insertAdjacentHTML('afterbegin', html);
-    // adding delete button behaviour
+
     const deleteButtons = document.querySelectorAll('.btn_delete');
     deleteButtons.forEach((button) => {
       button.addEventListener('click', () =>
@@ -67,48 +66,18 @@ const ingr_section = document.querySelector('.ingredients');
 const ingrgetter = CreateElementList(ingr_section);
 const form = document.querySelector('form');
 const title = document.querySelector('input[name="title"]');
-// let reqPayload = {};
 
-// just to prevent default submit behaviour
+// prevent default submit behaviour
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  // const title = form.title.value;
-  // reqPayload['title'] = form.title.value;
-  // reqPayload['ingredients'] = ingrgetter();
-
-  /* const ingredients = ingrgetter();
-  if (ingredients) {
-    console.log(ingrgetter());
-  } else {
-    console.warn('nothing added');
-  } */
-  // console.log(e.target);
-  // console.log(e.currentTarget);
-  // console.log(ingredientList);
-  /* fetch('/smoothies/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      title,
-      ingredients: ingredientList,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.error(err)); */
 });
 
 const submitButton = document.querySelector('.btn_submit');
 submitButton.addEventListener('click', (e) => {
-  // console.log(reqPayload);
-  // console.log(title.value);
   const reqPayload = {
     title: title.value,
     ingredients: ingrgetter(),
   };
-  // console.log(reqPayload);
   fetchRecipe(reqPayload);
 });
 
@@ -121,7 +90,14 @@ function fetchRecipe(recipe, url = '/smoothies/add') {
     body: JSON.stringify(recipe),
   })
     .then((response) => response.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+      if (!data.success) {
+        throw new Error('Ops!! failed to add smoothie');
+      } else if (data.success === 1) {
+        location.assign('/smoothies');
+      }
+      // TODO: redirect it from backend
+    })
     .catch((err) => console.error(err));
   //TODO: handle errors
 }

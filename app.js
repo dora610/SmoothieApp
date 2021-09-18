@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoutes');
 const smoothieRoute = require('./routes/smoothieRoute');
 const cookieParser = require('cookie-parser');
-const { requireAuth, chechUser } = require('./middlewares/authMiddleware');
+const { chechUser } = require('./middlewares/authMiddleware');
+const helpers = require('./util/helper');
 
 const port = process.env.PORT || 7777;
 
@@ -29,22 +30,16 @@ mongoose
   )
   .catch((err) => console.error(err));
 
+app.use((req, res, next) => {
+  res.locals.h = helpers;
+  next();
+});
+
 // routes
-app.get('*', chechUser);
+app.all('*', chechUser);
 app.get('/', (req, res) => {
   res.render('home');
 });
-/* app.get('/smoothies', requireAuth, (req, res) => {
-  let smoothies = [
-    { name: 'Banana Boost', ingrdt: ['Banana', 'Vanilla ice cream', 'Milk'] },
-    { name: 'Tropical Twist', ingrdt: ['Peach', 'Pinapple', 'Apple juice'] },
-    {
-      name: 'Protein Packer',
-      ingrdt: ['Oats', 'Peanut butter', 'Mil', 'Banana', 'Blueberries'],
-    },
-  ];
-  res.render('smoothies', { smoothies: [...smoothies, ...smoothies] });
-}); */
 app.use(authRoute);
 app.use('/smoothies', smoothieRoute);
 
