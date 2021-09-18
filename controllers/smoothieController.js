@@ -16,7 +16,7 @@ module.exports.showSmoothies = async (req, res) => {
   ]; */
   try {
     const smoothies = await Smoothie.find({});
-    res.render('smoothies', { smoothies: [...smoothies, ...smoothies] });
+    res.render('smoothies', { smoothies: smoothies });
   } catch (err) {
     handleError(err);
     res.status(400).json({ error: err });
@@ -31,12 +31,10 @@ module.exports.createSmoothie = async (req, res) => {
       ingredients,
       createdBy: res.locals.user._id,
     });
-    res
-      .status(201)
-      .json({
-        success: 1,
-        msg: `Successfully added smoothie with id: ${smoothie._id}`,
-      });
+    res.status(201).json({
+      success: 1,
+      msg: `Successfully added smoothie with id: ${smoothie._id}`,
+    });
   } catch (err) {
     handleError(err);
     res.status(400).json({ error: err });
