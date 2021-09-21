@@ -5,7 +5,7 @@
 </div>
 <ul class="recipes">
   <% smoothies.forEach(function(smoothie){ %>
-    <%- include('partials/smoothieCard', { smoothie}) -%>
+    <%- include('partials/smoothieCard', { smoothie, user }) -%>
   <% }) %>
 </ul>
 

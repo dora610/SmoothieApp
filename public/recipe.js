@@ -4,7 +4,7 @@ function CreateElementList(ele) {
   }
   const inputAdd = ele.querySelector('input[name="ingr"]');
   const addButton = ele.querySelector('.btn_add');
-  const ingrError = ele.querySelector('.ingr_error');
+  // const ingrError = ele.querySelector('.ingr_error');
   const ingrResult = ele.querySelector('.ingr_added');
 
   let ingredientList = [];
@@ -13,9 +13,11 @@ function CreateElementList(ele) {
     if (inputAdd.value) {
       ingredientList.unshift(inputAdd.value);
       inputAdd.value = '';
+      // ingrError && ingrError.textContent = '';
       showIngredients();
-    } else {
+      /* } else {
       ingrError.textContent = "hey!! let's add some ingredient";
+    } */
     }
   }
 
@@ -54,10 +56,10 @@ function CreateElementList(ele) {
   showIngredients();
 
   return function getIngerdientsList() {
-    if (!ingredientList.length) {
+    /* if (!ingredientList.length) {
       ingrError.textContent = "hey!! don't you like to add something?";
       return;
-    }
+    } */
     return ingredientList;
   };
 }
@@ -66,6 +68,10 @@ const ingr_section = document.querySelector('.ingredients');
 const ingrgetter = CreateElementList(ingr_section);
 const form = document.querySelector('form');
 const title = document.querySelector('input[name="title"]');
+const titleErr = document.querySelector('.title.error');
+const ingrErr = form.querySelector('.ingredient.error');
+titleErr.textContent = '';
+ingrErr.textContent = '';
 
 // prevent default submit behaviour
 form.addEventListener('submit', (e) => {
@@ -73,7 +79,13 @@ form.addEventListener('submit', (e) => {
 });
 
 const submitButton = document.querySelector('.btn_submit');
-submitButton.addEventListener('click', (e) => {
+submitButton.addEventListener('click', () => {
+  const ingrLi = ingrgetter();
+  console.log(ingrLi);
+  if (!ingrLi) {
+    ingrErr.textContent = 'Ingredient list cannot be empty. Add atleast 1 item';
+    return;
+  }
   const reqPayload = {
     title: title.value,
     ingredients: ingrgetter(),
@@ -91,6 +103,10 @@ function fetchRecipe(recipe, url = '/smoothies/add') {
   })
     .then((response) => response.json())
     .then((data) => {
+      if (data.errors) {
+        titleErr.textContent = data.errors.title;
+        ingrErr.textContent = data.errors.ingredient;
+      }
       if (!data.success) {
         throw new Error('Ops!! failed to add smoothie');
       } else if (data.success === 1) {
@@ -99,5 +115,4 @@ function fetchRecipe(recipe, url = '/smoothies/add') {
       // TODO: redirect it from backend
     })
     .catch((err) => console.error(err));
-  //TODO: handle errors
 }

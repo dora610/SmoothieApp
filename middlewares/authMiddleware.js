@@ -8,6 +8,7 @@ const requireAuth = (req, res, next) => {
       if (err) {
         console.error(err);
         res.redirect('/login');
+        return;
       }
       next();
     });
@@ -17,7 +18,7 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-const chechUser = (req, res, next) => {
+const checkUser = (req, res, next) => {
   const token = req.cookies['jwt'];
 
   if (token) {
@@ -37,4 +38,4 @@ const chechUser = (req, res, next) => {
   }
 };
 
-module.exports = { requireAuth, chechUser };
+module.exports = { requireAuth, checkUser };

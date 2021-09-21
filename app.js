@@ -5,8 +5,9 @@ const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoutes');
 const smoothieRoute = require('./routes/smoothieRoute');
 const cookieParser = require('cookie-parser');
-const { chechUser } = require('./middlewares/authMiddleware');
+const { checkUser } = require('./middlewares/authMiddleware');
 const helpers = require('./util/helper');
+const morgan = require('morgan');
 
 const port = process.env.PORT || 7777;
 
@@ -16,6 +17,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan('dev'));
 
 // connect db
 mongoose
@@ -31,12 +33,13 @@ mongoose
   .catch((err) => console.error(err));
 
 app.use((req, res, next) => {
+  res.locals.pathVal = req.path;
   res.locals.h = helpers;
   next();
 });
 
 // routes
-app.all('*', chechUser);
+app.all('*', checkUser);
 app.get('/', (req, res) => {
   res.render('home');
 });

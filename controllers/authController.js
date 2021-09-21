@@ -17,7 +17,7 @@ const handleErrors = (err) => {
     errors['email'] = 'Email is already taken';
   }
   if (err.message.includes('User validation failed')) {
-    errArr = Object.entries(err.errors);
+    const errArr = Object.entries(err.errors);
     errArr.forEach(
       ([key, { properties }]) => (errors[key] = properties.message)
     );
@@ -35,6 +35,7 @@ const createToken = (id) => {
 module.exports.signup_get = (req, res) => {
   res.render('signup');
 };
+
 module.exports.signup_post = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -50,11 +51,12 @@ module.exports.signup_post = async (req, res) => {
     res.status(400).json({ errors: handleErrors(err) });
   }
 };
+
 module.exports.login_get = (req, res) => {
   res.render('login');
 };
+
 module.exports.login_post = async (req, res) => {
-  // const { email, password } = req.body;
   try {
     const user = await User.login(req.body);
     const token = createToken(user._id);

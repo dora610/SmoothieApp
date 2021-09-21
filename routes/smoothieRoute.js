@@ -2,8 +2,13 @@ const router = require('express').Router();
 const smoothieController = require('../controllers/smoothieController');
 const { requireAuth } = require('../middlewares/authMiddleware');
 
-router.get('/', requireAuth, smoothieController.showSmoothies);
-router.get('/add', requireAuth, smoothieController.addSmoothie);
-router.post('/add', requireAuth, smoothieController.createSmoothie);
+router.get('/', smoothieController.showSmoothies);
+
+router
+  .route('/add')
+  .get(requireAuth, smoothieController.addSmoothie)
+  .post(requireAuth, smoothieController.createSmoothie);
+
+router.route('/edit/:id').get(requireAuth, smoothieController.editSmoothiePage);
 
 module.exports = router;

@@ -31,4 +31,14 @@ const smoothieSchema = new mongoose.Schema({
   ],
 });
 
+smoothieSchema.pre('save', function (next) {
+  console.log(this.ingredients);
+  console.log(this.ingredients.length);
+  // this.ingredients
+  if (this.ingredients.length === 0) {
+    throw new Error('ingredient: Invalid: Ingredient items cannot be empty');
+  }
+  next();
+});
+
 module.exports = mongoose.model('Smoothie', smoothieSchema);

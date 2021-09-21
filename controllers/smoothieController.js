@@ -1,19 +1,25 @@
 const Smoothie = require('../models/Smoothie');
 
 const handleError = (err) => {
+  console.error('from error handler');
   console.error(err.message, err.code);
+  let errors = {};
+  if (err.message.includes('Invalid')) {
+    const [prop, _, msg] = err.message.split(':');
+    errors[prop.trim()] = msg.trim();
+  }
+  if (err.message.includes('Smoothie validation failed')) {
+    const errArr = Object.entries(err.errors);
+    // console.log(errArr);
+    errArr.forEach(([key, { properties }]) => {
+      errors[key] = properties.message;
+    });
+  }
+  console.log(errors);
+  return errors;
 };
 
-// TODO: read from db
 module.exports.showSmoothies = async (req, res) => {
-  /* let smoothies = [
-    { name: 'Banana Boost', ingrdt: ['Banana', 'Vanilla ice cream', 'Milk'] },
-    { name: 'Tropical Twist', ingrdt: ['Peach', 'Pinapple', 'Apple juice'] },
-    {
-      name: 'Protein Packer',
-      ingrdt: ['Oats', 'Peanut butter', 'Mil', 'Banana', 'Blueberries'],
-    },
-  ]; */
   try {
     const smoothies = await Smoothie.find({});
     res.render('smoothies', { smoothies: smoothies });
@@ -21,6 +27,10 @@ module.exports.showSmoothies = async (req, res) => {
     handleError(err);
     res.status(400).json({ error: err });
   }
+};
+
+module.exports.addSmoothie = (req, res) => {
+  res.render('addSmoothie');
 };
 
 module.exports.createSmoothie = async (req, res) => {
@@ -36,11 +46,17 @@ module.exports.createSmoothie = async (req, res) => {
       msg: `Successfully added smoothie with id: ${smoothie._id}`,
     });
   } catch (err) {
-    handleError(err);
-    res.status(400).json({ error: err });
+    res.status(400).json({ errors: handleError(err) });
   }
 };
 
-module.exports.addSmoothie = (req, res) => {
-  res.render('addSmoothie');
+module.exports.editSmoothiePage = async (req, res) => {
+  try {
+    const smoothie = await Smoothie.findById(req.params.id);
+    console.log(smoothie);
+    // res.json(smoothie);
+    res.render('addSmoothie', { smoothie: smoothie });
+  } catch (err) {
+    console.error(err);
+  }
 };
