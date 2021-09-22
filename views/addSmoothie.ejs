@@ -1,15 +1,23 @@
 <%-include('partials/header') -%>
-
-<form method="POST" action="/smoothies/add">
-  <h2>Add recipe</h2>
-  <label for="title">Title: </label>
-  <input type="text" name="title" required/>
-  <div class="title error"></div>
+<form>
+  <h2><%=title-%></h2>
+  <label for="name">Name: </label>
+  <input type="text" name="name" id="name" required value="<%=(typeof name == 'string' && name)? name : ''%>"/>
+  <div class="name error"></div>
   <div class="ingredients">
     <label for="ingr">Enter ingerdient name:</label>
     <input type="text" name="ingr" id="ingr" />
     <button class="btn_add">Add</button>
-    <div class="ingr_added"></div>
+    <div class="ingr_added">
+     <%if(typeof ingredients == 'object' && ingredients){%>
+      <%ingredients.forEach((ele, index)=>{%>
+        <div class="ingr_row">
+          <p data-index="<%=index%>" class="ingr_name"><%=ele%></p>
+          <button data-index="<%=index%>" class="btn btn_delete" >Delete</button>
+        </div>
+      <%})%>
+     <%}%>
+    </div>
   </div>
   <div class="ingredient error"></div>
   <button type="submit" class="btn_submit">Create smoothie</button>

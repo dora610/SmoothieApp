@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const smoothieSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
-    required: 'Smoothie title cannot be blank',
+    required: 'Smoothie name cannot be blank',
     trim: true,
     lowercase: true,
   },
@@ -32,9 +32,6 @@ const smoothieSchema = new mongoose.Schema({
 });
 
 smoothieSchema.pre('save', function (next) {
-  console.log(this.ingredients);
-  console.log(this.ingredients.length);
-  // this.ingredients
   if (this.ingredients.length === 0) {
     throw new Error('ingredient: Invalid: Ingredient items cannot be empty');
   }

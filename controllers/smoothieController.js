@@ -10,7 +10,6 @@ const handleError = (err) => {
   }
   if (err.message.includes('Smoothie validation failed')) {
     const errArr = Object.entries(err.errors);
-    // console.log(errArr);
     errArr.forEach(([key, { properties }]) => {
       errors[key] = properties.message;
     });
@@ -30,14 +29,14 @@ module.exports.showSmoothies = async (req, res) => {
 };
 
 module.exports.addSmoothie = (req, res) => {
-  res.render('addSmoothie');
+  res.render('addSmoothie', { title: 'Add Smoothie' });
 };
 
 module.exports.createSmoothie = async (req, res) => {
   try {
-    const { title, ingredients } = req.body;
+    const { name, ingredients } = req.body;
     const smoothie = await Smoothie.create({
-      title,
+      name,
       ingredients,
       createdBy: res.locals.user._id,
     });
@@ -52,11 +51,18 @@ module.exports.createSmoothie = async (req, res) => {
 
 module.exports.editSmoothiePage = async (req, res) => {
   try {
-    const smoothie = await Smoothie.findById(req.params.id);
-    console.log(smoothie);
-    // res.json(smoothie);
-    res.render('addSmoothie', { smoothie: smoothie });
+    const { name, ingredients } = await Smoothie.findById(req.params.id);
+    console.log(name, ingredients);
+    res.render('addSmoothie', {
+      title: 'Edit Smoothie',
+      name,
+      ingredients,
+    });
   } catch (err) {
     console.error(err);
   }
+};
+
+module.exports.updateSmoothie = (req, res) => {
+  res.json(req.body);
 };

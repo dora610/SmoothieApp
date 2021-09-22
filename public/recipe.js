@@ -1,17 +1,17 @@
 const form = document.querySelector('form');
-const title = form.querySelector('input[name="title"]');
+const name = form.querySelector('input[name="name"]');
 const ingredientSection = form.querySelector('.ingredients');
 const submitButton = form.querySelector('.btn_submit');
 const ingrAdd = ingredientSection.querySelector('input[name="ingr"]');
 const addIngr = ingredientSection.querySelector('.btn_add');
 const ingrResult = ingredientSection.querySelector('.ingr_added');
-const titleErr = form.querySelector('.title.error');
+const nameErr = form.querySelector('.name.error');
 const ingrErr = form.querySelector('.ingredient.error');
 
 // ingredient state
 let ingredientList = [];
 
-titleErr.textContent = '';
+nameErr.textContent = '';
 ingrErr.textContent = '';
 
 const url = '/smoothies/add';
@@ -31,14 +31,22 @@ function deleteHandler(index) {
   showIngredients();
 }
 
-const showIngredients = () => {
-  ingrResult.innerHTML = '';
+const initIngredientList = () => {
+  if (!ingredientList.length && ingrResult.childElementCount > 0) {
+    const ingrResults = Array.from(ingrResult.querySelectorAll('p.ingr_name'));
+    const ingr_present = ingrResults.map((ele) => ele.textContent);
+    ingredientList = [...ingr_present];
+  }
+  showIngredients();
+};
 
+const showIngredients = () => {
+  console.log(ingredientList);
   const html = ingredientList
     .map((ele, index) => {
       return `
-        <div class="single_ingr">
-          <p data-index="${index + 1}">${ele}</p>
+        <div class="ingr_row">
+          <p data-index="${index + 1}" class="ingr_name">${ele}</p>
           <button data-index="${
             index + 1
           }" class="btn btn_delete" >Delete</button>
@@ -47,6 +55,7 @@ const showIngredients = () => {
     })
     .join('');
 
+  ingrResult.innerHTML = '';
   ingrResult.insertAdjacentHTML('afterbegin', html);
 };
 
@@ -61,7 +70,7 @@ function fetchRecipe(recipe) {
     .then((response) => response.json())
     .then((data) => {
       if (data.errors) {
-        titleErr.textContent = data.errors.title;
+        nameErr.textContent = data.errors.name;
         ingrErr.textContent = data.errors.ingredient;
       }
       if (!data.success) {
@@ -79,7 +88,7 @@ form.addEventListener('submit', (e) => {
 });
 
 form.addEventListener('click', (e) => {
-  titleErr.textContent = '';
+  nameErr.textContent = '';
   ingrErr.textContent = '';
   if (e.target && e.target.nodeName === 'BUTTON') {
     if (e.target.matches('button.btn_add')) {
@@ -91,7 +100,7 @@ form.addEventListener('click', (e) => {
         return;
       }
       const reqPayload = {
-        title: title.value,
+        name: name.value,
         ingredients: ingredientList,
       };
       fetchRecipe(reqPayload);
@@ -102,4 +111,5 @@ form.addEventListener('click', (e) => {
   }
 });
 
-showIngredients();
+initIngredientList();
+// showIngredients();

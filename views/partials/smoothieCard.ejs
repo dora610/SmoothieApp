@@ -1,9 +1,8 @@
 <li class="recipe">
   <img src="/smoothie.png" alt="smoothie recipe icon" />
-  <h4><%= smoothie.title %></h4>
+  <h4><%= smoothie.name %></h4>
   <p><%= smoothie.ingredients.join(', ') %></p>
   <%if(user && user._id.toString()===smoothie.createdBy.toString()){%>
-    <!-- <button class="btn_edit_smoothie">Edit</button> -->
     <a href="<%=`smoothies/edit/${smoothie._id.toString()}`-%>" class="btn btn_edit_smoothie">Edit</a>
   <%}%>
 </li>
