@@ -1,99 +1,56 @@
-function CreateElementList(ele) {
-  if (!(ele instanceof Element)) {
-    throw new Error('ingr section not found');
-  }
-  const inputAdd = ele.querySelector('input[name="ingr"]');
-  const addButton = ele.querySelector('.btn_add');
-  // const ingrError = ele.querySelector('.ingr_error');
-  const ingrResult = ele.querySelector('.ingr_added');
+const form = document.querySelector('form');
+const title = form.querySelector('input[name="title"]');
+const ingredientSection = form.querySelector('.ingredients');
+const submitButton = form.querySelector('.btn_submit');
+const ingrAdd = ingredientSection.querySelector('input[name="ingr"]');
+const addIngr = ingredientSection.querySelector('.btn_add');
+const ingrResult = ingredientSection.querySelector('.ingr_added');
+const titleErr = form.querySelector('.title.error');
+const ingrErr = form.querySelector('.ingredient.error');
 
-  let ingredientList = [];
+// ingredient state
+let ingredientList = [];
 
-  function addhandler() {
-    if (inputAdd.value) {
-      ingredientList.unshift(inputAdd.value);
-      inputAdd.value = '';
-      // ingrError && ingrError.textContent = '';
-      showIngredients();
-      /* } else {
-      ingrError.textContent = "hey!! let's add some ingredient";
-    } */
-    }
-  }
+titleErr.textContent = '';
+ingrErr.textContent = '';
 
-  function deleteHandler(index) {
-    ingredientList.splice(index - 1, 1);
+const url = '/smoothies/add';
+
+function addhandler(e) {
+  if (ingrAdd.value) {
+    ingredientList.unshift(ingrAdd.value);
+    ingrAdd.value = '';
     showIngredients();
+  } else {
+    ingrErr.textContent = 'cannot add empty element!!';
   }
+}
 
-  const showIngredients = () => {
-    ingrResult.innerHTML = '';
+function deleteHandler(index) {
+  ingredientList.splice(index - 1, 1);
+  showIngredients();
+}
 
-    const html = ingredientList
-      .map((ele, index) => {
-        return `
-        <div>
+const showIngredients = () => {
+  ingrResult.innerHTML = '';
+
+  const html = ingredientList
+    .map((ele, index) => {
+      return `
+        <div class="single_ingr">
           <p data-index="${index + 1}">${ele}</p>
           <button data-index="${
             index + 1
           }" class="btn btn_delete" >Delete</button>
         </div>
         `;
-      })
-      .join('');
-    ingrResult.insertAdjacentHTML('afterbegin', html);
+    })
+    .join('');
 
-    const deleteButtons = document.querySelectorAll('.btn_delete');
-    deleteButtons.forEach((button) => {
-      button.addEventListener('click', () =>
-        deleteHandler(button.dataset.index)
-      );
-    });
-  };
+  ingrResult.insertAdjacentHTML('afterbegin', html);
+};
 
-  addButton.addEventListener('click', addhandler);
-
-  showIngredients();
-
-  return function getIngerdientsList() {
-    /* if (!ingredientList.length) {
-      ingrError.textContent = "hey!! don't you like to add something?";
-      return;
-    } */
-    return ingredientList;
-  };
-}
-
-const ingr_section = document.querySelector('.ingredients');
-const ingrgetter = CreateElementList(ingr_section);
-const form = document.querySelector('form');
-const title = document.querySelector('input[name="title"]');
-const titleErr = document.querySelector('.title.error');
-const ingrErr = form.querySelector('.ingredient.error');
-titleErr.textContent = '';
-ingrErr.textContent = '';
-
-// prevent default submit behaviour
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-});
-
-const submitButton = document.querySelector('.btn_submit');
-submitButton.addEventListener('click', () => {
-  const ingrLi = ingrgetter();
-  console.log(ingrLi);
-  if (!ingrLi) {
-    ingrErr.textContent = 'Ingredient list cannot be empty. Add atleast 1 item';
-    return;
-  }
-  const reqPayload = {
-    title: title.value,
-    ingredients: ingrgetter(),
-  };
-  fetchRecipe(reqPayload);
-});
-
-function fetchRecipe(recipe, url = '/smoothies/add') {
+function fetchRecipe(recipe) {
   fetch(url, {
     method: 'POST',
     headers: {
@@ -116,3 +73,33 @@ function fetchRecipe(recipe, url = '/smoothies/add') {
     })
     .catch((err) => console.error(err));
 }
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+});
+
+form.addEventListener('click', (e) => {
+  titleErr.textContent = '';
+  ingrErr.textContent = '';
+  if (e.target && e.target.nodeName === 'BUTTON') {
+    if (e.target.matches('button.btn_add')) {
+      addhandler(e);
+    } else if (e.target.matches('button[type="submit"]')) {
+      if (!ingredientList.length) {
+        ingrErr.textContent =
+          'Ingredient list cannot be empty. Add atleast 1 item';
+        return;
+      }
+      const reqPayload = {
+        title: title.value,
+        ingredients: ingredientList,
+      };
+      fetchRecipe(reqPayload);
+    } else if (e.target.matches('button.btn_delete')) {
+      let deleteIndex = e.target.dataset.index;
+      deleteHandler(deleteIndex);
+    }
+  }
+});
+
+showIngredients();

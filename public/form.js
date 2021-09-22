@@ -31,7 +31,7 @@ form.addEventListener('submit', (e) => {
         emailErr.textContent = data.errors.email;
         passwordErr.textContent = data.errors.password;
       }
-      data.user && location.assign('/');
+      data.user && location.replace('/');
     })
     .catch((err) => console.error(err));
 });
