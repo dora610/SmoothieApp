@@ -51,20 +51,20 @@ module.exports.createSmoothie = async (req, res) => {
 
 module.exports.editSmoothiePage = async (req, res) => {
   try {
-    // 1. Find out store by given _id value
+    // 1. Find out smoothie by given _id value
     const { name, ingredients, createdBy } = await Smoothie.findById(
       req.params.id
     );
     if (!name || !ingredients) {
-      res.status(403).send('Store not found!'); // TODO: check if we can send & redirect together
+      res.status(403).send('Smoothie not found!'); // TODO: check if we can send & redirect together
       return;
     }
-    // 2. Check if the user own that store
+    // 2. Check if the user own that smoothie
     if (!createdBy.equals(res.locals.user._id)) {
       res.status(403).send('You cannot edit that!'); // TODO: check if we can send & redirect together
       return;
     }
-    //3. Render edit store page
+    //3. Render edit smoothie page
     res.render('addSmoothie', {
       title: 'Edit Smoothie',
       name,
@@ -90,11 +90,15 @@ module.exports.updateSmoothie = async (req, res) => {
       return;
     }
     // 3. update smoothie
-    const newSmoothie = await Smoothie.findByIdAndUpdate(store._id, req.body, {
-      new: true,
-      timestamps: true,
-      runValidators: true,
-    });
+    const newSmoothie = await Smoothie.findByIdAndUpdate(
+      smoothie._id,
+      req.body,
+      {
+        new: true,
+        timestamps: true,
+        runValidators: true,
+      }
+    );
     // 4. redirect
     res.status(201).json({
       success: 1,
