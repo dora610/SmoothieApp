@@ -7,14 +7,16 @@ const addIngr = ingredientSection.querySelector('.btn_add');
 const ingrResult = ingredientSection.querySelector('.ingr_added');
 const nameErr = form.querySelector('.name.error');
 const ingrErr = form.querySelector('.ingredient.error');
+const errorMessage = document.querySelector('.message.error');
+const successMessage = document.querySelector('.message.success');
 
 // ingredient state
 let ingredientList = [];
 
+errorMessage.textContent = '';
+successMessage.textContent = '';
 nameErr.textContent = '';
 ingrErr.textContent = '';
-
-const url = '/smoothies/add';
 
 function addhandler(e) {
   if (ingrAdd.value) {
@@ -41,7 +43,6 @@ const initIngredientList = () => {
 };
 
 const showIngredients = () => {
-  console.log(ingredientList);
   const html = ingredientList
     .map((ele, index) => {
       return `
@@ -60,8 +61,17 @@ const showIngredients = () => {
 };
 
 function fetchRecipe(recipe) {
+  const url = location.pathname;
+  let routeMethod;
+  // determine routed method based on the url path
+  if (location.pathname === '/smoothies/add') {
+    routeMethod = 'POST';
+  } else {
+    routeMethod = 'PUT';
+  }
+
   fetch(url, {
-    method: 'POST',
+    method: routeMethod,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -73,10 +83,17 @@ function fetchRecipe(recipe) {
         nameErr.textContent = data.errors.name;
         ingrErr.textContent = data.errors.ingredient;
       }
-      if (!data.success) {
-        throw new Error('Ops!! failed to add smoothie');
-      } else if (data.success === 1) {
-        location.assign('/smoothies');
+      if (data.success == 1) {
+        // console.log(data);
+        successMessage.textContent = `${data.msg}, page will be auto-redirected to smoothies page after 10s..`;
+        successMessage.focus();
+        setTimeout(() => {
+          location.assign('/smoothies');
+        }, 15000);
+      } else {
+        errorMessage.textContent = 'Ops!! somthing is fishy!';
+        errorMessage.focus();
+        throw new Error(data);
       }
       // TODO: redirect it from backend
     })
@@ -112,4 +129,3 @@ form.addEventListener('click', (e) => {
 });
 
 initIngredientList();
-// showIngredients();

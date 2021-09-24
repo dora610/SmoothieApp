@@ -3,6 +3,6 @@
   <h4><%= smoothie.name %></h4>
   <p><%= smoothie.ingredients.join(', ') %></p>
   <%if(user && user._id.toString()===smoothie.createdBy.toString()){%>
-    <a href="<%=`smoothies/edit/${smoothie._id.toString()}`-%>" class="btn btn_edit_smoothie">Edit</a>
+    <a href="<%=`smoothies/edit/${smoothie._id.toString()}`-%>" class="btn btn_outline btn_edit">Edit</a>
   <%}%>
 </li>

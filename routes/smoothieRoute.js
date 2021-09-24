@@ -10,6 +10,6 @@ router
   .post(requireAuth, smoothieController.createSmoothie);
 
 router.route('/edit/:id').get(requireAuth, smoothieController.editSmoothiePage);
-router.route('/edit/:id').post(requireAuth, smoothieController.updateSmoothie);
+router.route('/edit/:id').put(requireAuth, smoothieController.updateSmoothie);
 
 module.exports = router;

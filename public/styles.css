@@ -35,7 +35,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 120px;
+  margin-bottom: 60px;
 }
 nav ul {
   display: flex;
@@ -70,6 +70,19 @@ nav li a {
 }
 .btn_outline:hover {
   background: #fee996;
+}
+.btn_edit {
+  font-weight: 600;
+  display: block;
+  padding: 1px 5px 1px 5px;
+  letter-spacing: 1.5px;
+  width: 20%;
+  margin: 15px auto 1px;
+  position: absolute;
+  top: 0;
+  right: -9px;
+  font-size: small;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
 }
 form h2 {
   font-size: 2.4em;
@@ -114,6 +127,15 @@ button {
   font-size: 0.8em;
   font-weight: bold;
 }
+.success {
+  color: limegreen;
+  margin: 10px 2px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+.message {
+  font-size: 1em;
+}
 header {
   display: flex;
   align-items: center;
@@ -156,7 +178,13 @@ header .btn {
   position: relative;
   text-align: center;
   padding: 0 20px 30px 20px;
+  /* box-shadow: 2px 1px 7px rgba(0, 0, 0, 0.1); */
+  transition: all 0.4s ease-in-out;
+}
+.recipe:hover {
+  transform: translateY(-3px);
   box-shadow: 2px 1px 7px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease-in-out;
 }
 .recipe img {
   width: 100px;
