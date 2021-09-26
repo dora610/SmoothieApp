@@ -8,9 +8,12 @@ const cookieParser = require('cookie-parser');
 const { checkUser } = require('./middlewares/authMiddleware');
 const helpers = require('./util/helper');
 const morgan = require('morgan');
+const compression = require('compression');
 
 const port = process.env.PORT || 7777;
 
+// compress res
+app.use(compression());
 // static middleware
 app.use(express.static('public'));
 // view engine
