@@ -7,8 +7,8 @@ const addIngr = ingredientSection.querySelector('.btn_add');
 const ingrResult = ingredientSection.querySelector('.ingr_added');
 const nameErr = form.querySelector('.name.error');
 const ingrErr = form.querySelector('.ingredient.error');
-const errorMessage = document.querySelector('.message.error');
-const successMessage = document.querySelector('.message.success');
+const successMessage = document.querySelector('.status > .success');
+const errorMessage = document.querySelector('.status > .error');
 
 // ingredient state
 let ingredientList = [];
@@ -18,7 +18,25 @@ successMessage.textContent = '';
 nameErr.textContent = '';
 ingrErr.textContent = '';
 
-function addhandler(e) {
+const showIngredients = () => {
+  const html = ingredientList
+    .map((ele, index) => {
+      return `
+        <div class="ingr_row">
+          <p data-index="${index + 1}" class="ingr_name">${ele}</p>
+          <button data-index="${
+            index + 1
+          }" class="btn btn_delete" >Delete</button>
+        </div>
+        `;
+    })
+    .join('');
+
+  ingrResult.innerHTML = '';
+  ingrResult.insertAdjacentHTML('afterbegin', html);
+};
+
+function addhandler() {
   if (ingrAdd.value) {
     ingredientList.unshift(ingrAdd.value);
     ingrAdd.value = '';
@@ -42,33 +60,20 @@ const initIngredientList = () => {
   showIngredients();
 };
 
-const showIngredients = () => {
-  const html = ingredientList
-    .map((ele, index) => {
-      return `
-        <div class="ingr_row">
-          <p data-index="${index + 1}" class="ingr_name">${ele}</p>
-          <button data-index="${
-            index + 1
-          }" class="btn btn_delete" >Delete</button>
-        </div>
-        `;
-    })
-    .join('');
-
-  ingrResult.innerHTML = '';
-  ingrResult.insertAdjacentHTML('afterbegin', html);
-};
-
 function fetchRecipe(recipe) {
   const url = location.pathname;
-  let routeMethod;
-  // determine routed method based on the url path
+  let routeMethod, ops;
+  // determine route method based on the url path
   if (location.pathname === '/smoothies/add') {
     routeMethod = 'POST';
+    ops = 'add';
   } else {
     routeMethod = 'PUT';
+    ops = 'edit';
   }
+
+  successMessage.innerHTML = '';
+  errorMessage.innerHTML = '';
 
   fetch(url, {
     method: routeMethod,
@@ -77,25 +82,35 @@ function fetchRecipe(recipe) {
     },
     body: JSON.stringify(recipe),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        errorMessage.insertAdjacentHTML(
+          'afterbegin',
+          `<h4>Ops!! ${response.statusText}</h4>`
+        );
+      }
+      return response.json();
+    })
     .then((data) => {
       if (data.errors) {
         nameErr.textContent = data.errors.name;
         ingrErr.textContent = data.errors.ingredient;
+        data.errors.genericError &&
+          errorMessage.insertAdjacentHTML(
+            'beforeend',
+            `<p><strong>${data.errors.genericError}</strong></p>`
+          );
+        throw Error('error occurred');
       }
-      if (data.success == 1) {
-        // console.log(data);
-        successMessage.textContent = `${data.msg}, page will be auto-redirected to smoothies page after 10s..`;
-        successMessage.focus();
-        setTimeout(() => {
-          location.assign('/smoothies');
-        }, 15000);
-      } else {
-        errorMessage.textContent = 'Ops!! somthing is fishy!';
-        errorMessage.focus();
-        throw new Error(data);
-      }
-      // TODO: redirect it from backend
+      successMessage.insertAdjacentHTML(
+        'afterbegin',
+        `<h4>Successfully ${ops}ed <strong>${data.name}</strong><h4>
+        <p>will be auto-redirected to <a href='/smoothies'>View Smoothies</a> after 10s...</p>`
+      );
+      successMessage.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        location.assign('/smoothies');
+      }, 10000);
     })
     .catch((err) => console.error(err));
 }

@@ -10,17 +10,23 @@ const helpers = require('./util/helper');
 const morgan = require('morgan');
 const compression = require('compression');
 
-const port = process.env.PORT || 7777;
+// const port = process.env.PORT || 7777;
+app.set('port', process.env.PORT || 7777);
 
-// compress res
-app.use(compression());
+// compression
+if (app.get('env') === 'production') {
+  app.use(compression());
+  app.use(morgan('combined'));
+}
+if (app.get('env') === 'development') {
+  app.use(morgan('dev'));
+}
 // static middleware
 app.use(express.static('public'));
 // view engine
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(cookieParser());
-app.use(morgan('dev'));
 
 // connect db
 mongoose
@@ -28,10 +34,12 @@ mongoose
   .then(() => {
     console.log('Successfully connected to mongodb');
     // fire up server
-    app.listen(port);
+    app.listen(app.get('port'));
   })
   .then(() =>
-    console.log(`server is up and running at http://localhost:${port}`)
+    console.log(
+      `server is up and running at http://localhost:${app.get('port')}`
+    )
   )
   .catch((err) => console.error(err));
 

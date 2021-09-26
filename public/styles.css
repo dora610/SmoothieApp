@@ -6,6 +6,9 @@ body {
   font-size: 1.2rem;
   letter-spacing: 1px;
   background: #fafafa;
+  --errorPink: #ff0099;
+  --errorRed: #e21717;
+  --successLimeGreen: #4dd637;
 }
 h1,
 h2,
@@ -122,19 +125,27 @@ button {
   cursor: pointer;
 }
 .error {
-  color: #ff0099;
+  color: var(--errorPink);
   margin: 10px 2px;
   font-size: 0.8em;
   font-weight: bold;
 }
-.success {
-  color: limegreen;
-  margin: 10px 2px;
-  font-size: 0.8em;
+.status {
+  text-align: center;
+  margin: 15px auto;
+}
+.status .error h4:nth-child(n),
+.status .error p:nth-child(n) {
+  color: var(--errorRed);
+  font-size: 1.2em;
   font-weight: bold;
 }
-.message {
-  font-size: 1em;
+.status .success h4:nth-child(n),
+.status .success p:nth-child(n) {
+  color: var(--successLimeGreen);
+  margin: 10px 2px;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 header {
   display: flex;
@@ -210,10 +221,14 @@ footer {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 0.6em;
-  display: block;
+  display: inline;
   padding: 8px 7px;
   letter-spacing: 1px;
   cursor: pointer;
+  width: 60px;
+}
+#ingr {
+  width: 75%;
 }
 .ingr_added {
   max-height: 50vh;
@@ -227,4 +242,5 @@ footer {
 .ingr_added p {
   width: 100%;
   font-weight: 500;
+  padding-left: 1vw;
 }

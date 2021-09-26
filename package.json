@@ -21,7 +21,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.5",
     "morgan": "^1.10.0",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

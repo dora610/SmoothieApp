@@ -1,17 +1,18 @@
 <%-include('partials/header') -%>
 
-
+<div class="status">
+  <div class="success"></div>
+  <div class="error"></div>
+</div>
 <form>
   <h2><%=title-%></h2>
-  <div class="message error"></div>
-  <div class="message success"></div>
   <label for="name">Name: </label>
   <input type="text" name="name" id="name" value="<%=(typeof name == 'string' && name)? name : ''%>" required/>
   <div class="name error"></div>
   <div class="ingredients">
     <label for="ingr">Enter ingerdient name:</label>
     <input type="text" name="ingr" id="ingr" />
-    <button class="btn_add">Add</button>
+    <button class="btn btn_add">Add</button>
     <div class="ingr_added">
      <%if(typeof ingredients == 'object' && ingredients){%>
       <%ingredients.forEach((ele, index)=>{%>
@@ -24,7 +25,7 @@
     </div>
   </div>
   <div class="ingredient error"></div>
-  <button type="submit" class="btn_submit">Create smoothie</button>
+  <button type="submit" class="btn_submit"><%=title-%></button>
 </form>
 
 <script src="/recipe.js"></script>

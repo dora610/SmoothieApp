@@ -1,4 +1,6 @@
 const Smoothie = require('../models/Smoothie');
+const logger = require('../log/devLogger');
+const devLogger = logger('smoothieController');
 
 const handleError = (err) => {
   console.error(err.message, err.code);
@@ -7,14 +9,14 @@ const handleError = (err) => {
     const [prop, _, msg] = err.message.split(':');
     errors[prop.trim()] = msg.trim();
   }
-  if (err.message.includes('Validation failed')) {
+  if (err.message.includes('validation failed')) {
     const errArr = Object.entries(err.errors);
     errArr.forEach(
       ([key, { properties }]) => (errors[key] = properties.message)
     );
   }
   if (!Object.keys(errors).length) {
-    errors['err'] = err.message;
+    errors['genericError'] = err.message;
   }
   return errors;
 };
@@ -22,8 +24,10 @@ const handleError = (err) => {
 module.exports.showSmoothies = async (req, res) => {
   try {
     const smoothies = await Smoothie.find({});
+    // devLogger.debug(smoothies);
     res.render('smoothies', { smoothies: smoothies });
   } catch (err) {
+    devLogger.error(err);
     res.status(400).json({ error: handleError(err) });
   }
 };
@@ -41,10 +45,12 @@ module.exports.createSmoothie = async (req, res) => {
       createdBy: res.locals.user._id,
     });
     res.status(201).json({
-      success: 1,
-      msg: `Successfully added smoothie: ${smoothie.name}`,
+      name: smoothie.name,
+      ingr: smoothie.ingredients,
+      createdAt: smoothie.createdAt,
     });
   } catch (err) {
+    devLogger.error(err);
     res.status(400).json({ errors: handleError(err) });
   }
 };
@@ -55,6 +61,7 @@ module.exports.editSmoothiePage = async (req, res) => {
     const { name, ingredients, createdBy } = await Smoothie.findById(
       req.params.id
     );
+    devLogger.info(name + ' | ' + ingredients + ' | ' + createdBy);
     if (!name || !ingredients) {
       res.status(403).send('Smoothie not found!'); // TODO: check if we can send & redirect together
       return;
@@ -71,6 +78,7 @@ module.exports.editSmoothiePage = async (req, res) => {
       ingredients,
     });
   } catch (err) {
+    devLogger.error(err);
     res.status(404).json({ errors: handleError(err) });
   }
 };
@@ -101,10 +109,12 @@ module.exports.updateSmoothie = async (req, res) => {
     );
     // 4. redirect
     res.status(201).json({
-      success: 1,
-      msg: `Successfully edited smoothie: ${newSmoothie.name}`,
+      name: newSmoothie.name,
+      ingr: smoothie.ingredients,
+      createdAt: newSmoothie.createdAt,
     });
   } catch (err) {
-    res.status(404).json({ errors: handleError(err) });
+    devLogger.error(err);
+    res.status(400).json({ errors: handleError(err) });
   }
 };
