@@ -1,8 +1,12 @@
-<li class="recipe">
+<li class="recipe" data-id="<%=`${smoothie._id}`-%>">
   <img src="/smoothie.png" alt="smoothie recipe icon" />
-  <h4><%= smoothie.name %></h4>
-  <p><%= smoothie.ingredients.join(', ') %></p>
+  <div>
+    <h4><%= smoothie.name %></h4>
+    <p><%= smoothie.ingredients.join(', ') %></p>
+  </div>
   <%if(user && user._id.toString()===smoothie.createdBy.toString()){%>
     <a href="<%=`smoothies/edit/${smoothie._id.toString()}`-%>" class="btn btn_outline btn_edit">Edit</a>
   <%}%>
+  <!-- <a href="<%=`/smoothies/${smoothie._id.toString()}`%>" class="btn btn_outline">View more ➡</a> -->
+  <button class="btn btn_view">View more ➡</button>
 </li>

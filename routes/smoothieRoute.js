@@ -9,7 +9,11 @@ router
   .get(requireAuth, smoothieController.addSmoothie)
   .post(requireAuth, smoothieController.createSmoothie);
 
-router.route('/edit/:id').get(requireAuth, smoothieController.editSmoothiePage);
-router.route('/edit/:id').put(requireAuth, smoothieController.updateSmoothie);
+router
+  .route('/edit/:id')
+  .get(requireAuth, smoothieController.editSmoothiePage)
+  .put(requireAuth, smoothieController.updateSmoothie);
+
+router.route('/:id').get(requireAuth, smoothieController.viewSmoothie);
 
 module.exports = router;

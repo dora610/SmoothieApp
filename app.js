@@ -9,6 +9,8 @@ const { checkUser } = require('./middlewares/authMiddleware');
 const helpers = require('./util/helper');
 const morgan = require('morgan');
 const compression = require('compression');
+const fs = require('fs');
+const path = require('path');
 
 // const port = process.env.PORT || 7777;
 app.set('port', process.env.PORT || 7777);
@@ -16,17 +18,34 @@ app.set('port', process.env.PORT || 7777);
 // compression
 if (app.get('env') === 'production') {
   app.use(compression());
-  app.use(morgan('combined'));
 }
-if (app.get('env') === 'development') {
-  app.use(morgan('dev'));
-}
+
 // static middleware
 app.use(express.static('public'));
+
 // view engine
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(cookieParser());
+
+// HTTP request logger middleware for node.js, we will take split/dual loggin approach
+// log only 4xx and 5xx responses to console
+const loggingStyle = app.get('env') === 'production' ? 'combined' : 'dev';
+app.use(
+  morgan(loggingStyle, {
+    skip: function (req, res) {
+      return res.statusCode < 400;
+    },
+  })
+);
+// log all requests to access.log
+app.use(
+  morgan('combined', {
+    stream: fs.createWriteStream(path.join(__dirname, './log/morgan.log'), {
+      flags: 'a',
+    }),
+  })
+);
 
 // connect db
 mongoose

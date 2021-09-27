@@ -32,6 +32,25 @@ module.exports.showSmoothies = async (req, res) => {
   }
 };
 
+module.exports.viewSmoothie = async (req, res) => {
+  try {
+    const smoothie = await Smoothie.findById(req.params.id)
+      .populate({
+        path: 'createdBy',
+        select: 'email -_id',
+      })
+      .select('-_id');
+    if (!smoothie) {
+      res.status(404).send('Smoothie not found');
+    }
+    // devLogger.debug(smoothie);
+    res.status(200).json(smoothie);
+  } catch (err) {
+    devLogger.error(err);
+    res.status(404).json({ errors: handleError(err) });
+  }
+};
+
 module.exports.addSmoothie = (req, res) => {
   res.render('addSmoothie', { title: 'Add Smoothie' });
 };
