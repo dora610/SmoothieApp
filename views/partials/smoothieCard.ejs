@@ -8,5 +8,7 @@
     <a href="<%=`smoothies/edit/${smoothie._id.toString()}`-%>" class="btn btn_outline btn_edit">Edit</a>
   <%}%>
   <!-- <a href="<%=`/smoothies/${smoothie._id.toString()}`%>" class="btn btn_outline">View more ➡</a> -->
-  <button class="btn btn_view">View more ➡</button>
+  <%if(user){%>
+    <button class="btn btn_view">View more ➡</button>
+  <%}%>
 </li>
