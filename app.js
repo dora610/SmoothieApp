@@ -70,11 +70,10 @@ app.use((req, res, next) => {
 
 // routes
 app.all('*', checkUser);
-app.get('/', (req, res) => {
-  res.render('home');
-});
+// app.use(checkUser);
+
 app.use(authRoute);
-app.use('/smoothies', smoothieRoute);
+app.use(smoothieRoute);
 
 // cookies
 /* app.get('/set-cookies', (req, res) => {

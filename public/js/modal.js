@@ -2,8 +2,13 @@ const recipes = document.querySelector('.recipes');
 const outerModal = document.querySelector('.modal_outer');
 const innerModal = document.querySelector('.modal_inner');
 
+const successMessage = document.querySelector('.status > .success');
+const errorMessage = document.querySelector('.status > .error');
+
 const fetchSmoothie = (id) => {
   const url = `/smoothies/${id}`;
+  successMessage.innerHTML = '';
+  errorMessage.innerHTML = '';
 
   fetch(url, {
     method: 'GET',
@@ -11,10 +16,26 @@ const fetchSmoothie = (id) => {
       'Content-Type': 'application/json',
     },
   })
-    .then((res) => res.json())
+    .then((res) => {
+      // console.log(res);
+      if (res.redirected && res.url.includes('login')) {
+        location.replace(res.url);
+        throw Error('Redirected to login as user is not logged in');
+      } else if (!res.ok) {
+        errorMessage.insertAdjacentHTML(
+          'afterbegin',
+          `<h4>Ops!! ${res.statusText}</h4>`
+        );
+        throw Error(`Bad network request: ${res.statusText} | ${res.status}`);
+      } else {
+        return res.json();
+      }
+      // return res.json();
+    })
     .then((smoothie) => {
       generateInnerModal(smoothie);
-    });
+    })
+    .catch((err) => console.error(err));
 };
 
 const generateInnerModal = (item) => {

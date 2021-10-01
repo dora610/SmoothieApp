@@ -14,7 +14,18 @@ const requireAuth = (req, res, next) => {
     });
   } else {
     // TODO: redirect back to /smoothies url after successful login
-    res.redirect('/login');
+    // res.redirect('/login');
+    res.format({
+      'text/html': function () {
+        res.redirect('/login');
+      },
+      'text/plain': function () {
+        res.send('User is not logged in');
+      },
+      'application/json': function () {
+        res.send({ err: 'User is not logged in' });
+      },
+    });
   }
 };
 

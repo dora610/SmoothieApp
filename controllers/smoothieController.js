@@ -21,6 +21,10 @@ const handleError = (err) => {
   return errors;
 };
 
+module.exports.showHomepage = (req, res) => {
+  res.render('home');
+};
+
 module.exports.showSmoothies = async (req, res) => {
   try {
     const smoothies = await Smoothie.find({});
