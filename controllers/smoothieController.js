@@ -27,7 +27,10 @@ module.exports.showHomepage = (req, res) => {
 
 module.exports.showSmoothies = async (req, res) => {
   try {
-    const smoothies = await Smoothie.find({});
+    const smoothies = await Smoothie.find({}).populate({
+      path: 'createdBy',
+      select: 'email',
+    });
     // devLogger.debug(smoothies);
     res.render('smoothies', { smoothies: smoothies });
   } catch (err) {

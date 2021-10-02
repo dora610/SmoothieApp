@@ -282,13 +282,23 @@ footer {
   column-gap: 50px;
   text-align: left;
   width: 585px;
-  margin-top: 25vh;
+  /* margin-top: 25vh; */
   border-radius: 10px;
   background: #fafafa;
   padding: 2rem;
   box-shadow: 5px 5px 15px black;
   transform: translateY(-200%);
-  transition: transform 1s ease-out;
+  transition: transform 1s ease-in-out;
+  opacity: 0;
+  z-index: -20;
+  /* by default inner will be hidden, after outer-modal open inner 
+  modal - opacity 1 & zindex 20 */
+}
+.modal_inner.open {
+  position: absolute;
+  top: 25vh;
+  opacity: 1;
+  z-index: 20;
 }
 .modal_inner .desc p:nth-child(2n + 1) {
   font-weight: 400;
@@ -300,6 +310,7 @@ footer {
   font-weight: 500;
   font-size: 0.8em;
   padding-bottom: 5px;
+  margin-top: 3px;
   margin-bottom: 5px;
   border-bottom: 1px solid var(--cream);
 }
@@ -315,6 +326,6 @@ footer {
   display: flex;
   align-items: center;
 }
-.modal_outer.open .modal_inner {
+.modal_outer.open .modal_inner.open {
   transform: translateY(0);
 }

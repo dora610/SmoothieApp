@@ -11,7 +11,9 @@
 </ul>
 
 <div class="modal_outer">
-  <div class="modal_inner"></div>
+  <%smoothies.forEach(function(smoothie){%>
+    <%- include('partials/innerModal', {smoothie}) -%>
+  <%})%>
 </div>
 
 <script src="/js/modal.js"></script>

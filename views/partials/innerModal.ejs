@@ -1,0 +1,17 @@
+<div class="modal_inner" data-id="<%=`${smoothie._id}`-%>">
+    <div class="img">
+      <img src="/smoothie.png" alt="smoothie recipe icon" />
+    </div>
+    <div class="desc">
+        <p>name:</p>
+        <p><%=smoothie.name-%></p>
+        <p>ingredients used :</p>
+        <p><%=smoothie.ingredients.join(', ')-%></p>
+        <p>user:</p>
+        <p><%=smoothie.createdBy.email-%></p>
+        <p>created on :</p>
+        <p><%=new Date(smoothie.createdAt)-%></p>
+        <p>updated on :</p>
+        <p><%=new Date(smoothie.updatedAt)-%></p>
+    </div>
+  </div>
